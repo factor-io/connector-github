@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors       = ['Maciej Skierkowski']
   s.email         = ['maciej@factor.io']
   s.homepage      = 'https://factor.io'
-  s.summary       = 'BitBalloon Factor.io Connector'
+  s.summary       = 'Github Factor.io Connector'
   s.files         = ['lib/factor/connector/github.rb']
   
   s.require_paths = ['lib']
