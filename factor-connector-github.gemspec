@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name          = 'factor-connector-github'
   s.version       = '0.0.2'
   s.platform      = Gem::Platform::RUBY
-  s.authors       = ['Maciej Skierkowski']
-  s.email         = ['maciej@factor.io']
+  s.authors       = ['Maciej Skierkowski', 'Andrew Akers']
+  s.email         = ['maciej@factor.io', 'andrewrdakers@gmail.com']
   s.homepage      = 'https://factor.io'
   s.summary       = 'Github Factor.io Connector'
   s.files         = ['lib/factor/connector/github.rb']
