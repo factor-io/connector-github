@@ -6,19 +6,20 @@ Factor::Connector.service 'github_issues' do
     api_key   = params['api_key']
     username  = params['username']
     repo      = params['repo_name']
-    filter    = params['filter'] #default: assigned
-    state     = params['state'] #default: open
+    filter    = params['filter']
+    state     = params['state']
     since     = params['since']
     labels    = params['labels']
     sort      = params['sort']
-    direction = params['direction'] #default: desc
+    direction = params['direction']
 
     fail 'API Key must be defined' unless api_key
 
+    info 'Connecting to Github'
     begin
       github = Github.new oauth_token: api_key
     rescue
-      "Unable to connect to github"
+      "Unable to connect to Github"
     end
 
     payload = {
@@ -31,14 +32,8 @@ Factor::Connector.service 'github_issues' do
       sort: sort,
       direction: direction
     }
-    puts "params: #{params}"
 
-    begin
-      issues = github.issues.list payload
-      puts "issues: #{issues}"
-    rescue => ex
-      fail "exception: #{ex}"
-    end
+    issues = github.issues.list payload
 
     action_callback issues
   end
