@@ -3,3 +3,4 @@ rvm:
 - 1.9.3
 env:
   global:
+    secure: iDc193cF/0sCz3tysdFsRAglcFfMAuQid+Nt/NvwRu3F8RRbKMApUFzlZTZvqtUYDKJvjtq9yLmOwCcRjfVdH3QIL9Ti0M9YB09xBHg52lT8Wo7VsneNw2W/X8En3hvfGIz9+pRmVnnNgRqfAsO6Eq2DmswmJLKTxmXndaRHXUg=
