@@ -5,7 +5,7 @@ Factor::Connector.service 'github_issues' do
   action 'list' do |params|
     api_key   = params['api_key']
     username  = params['username']
-    repo      = params['repo_name']
+    repo      = params['repo']
     filter    = params['filter']
     state     = params['state']
     since     = params['since']
@@ -19,7 +19,7 @@ Factor::Connector.service 'github_issues' do
     begin
       github = Github.new oauth_token: api_key
     rescue
-      "Unable to connect to Github"
+      'Unable to connect to Github'
     end
 
     payload = {
@@ -36,5 +36,34 @@ Factor::Connector.service 'github_issues' do
     issues = github.issues.list payload
 
     action_callback issues
+  end
+
+  action 'create' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    title    = params['title']
+    body     = params['body']
+
+    fail 'API key must be defined' unless api_key
+    fail 'Issue must have a title' unless title
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key, user: username, repo: repo
+    rescue
+      'Unable to connect to Github'
+    end
+
+    info 'Creating new issue'
+    begin
+      issue = github.issues.create title: title, body: body
+    rescue
+      fail 'Unable to create the issue'
+    end
+
+    info 'Issue has been created'
+
+    action_callback issue
   end
 end
