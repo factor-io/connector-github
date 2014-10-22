@@ -62,7 +62,7 @@ Factor::Connector.service 'github_issues' do
       fail 'Unable to create the issue'
     end
 
-    info
+    info 'Issue has been created'
 
     action_callback issue
   end
