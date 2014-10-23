@@ -33,7 +33,11 @@ Factor::Connector.service 'github_issues' do
       direction: direction
     }
 
-    issues = github.issues.list payload
+    github_wrapper = github.issues.list payload
+
+    issues = []
+    
+    github_wrapper.body.each { |mash| issues << mash.to_hash }
 
     action_callback issues
   end
@@ -63,6 +67,36 @@ Factor::Connector.service 'github_issues' do
     end
 
     info 'Issue has been created'
+
+    action_callback issue
+  end
+
+  action 'edit' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    title    = params['title']
+    body     = params['body']
+    number   = params['number']
+
+    fail 'API key must be defined' unless api_key
+    fail 'Issue must have a title' unless title
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key, user: username, repo: repo
+    rescue
+      'Unable to connect to Github'
+    end
+
+    info 'Updating your issue'
+    begin
+      issue = github.issues.edit username, repo, number, title: title, body: body
+    rescue
+      fail 'Unable to update the issue'
+    end
+
+    info 'Issue has been updated'
 
     action_callback issue
   end

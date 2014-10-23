@@ -7,13 +7,16 @@ describe 'github' do
     @username  = 'andrewrdakers'
     @repo      = 'working_with_github_api'
     @filter    = 'created'
-    @state     = 'open'
+    @state     = 'closed'
     @since     = '2011-04-12T12:12:12Z'
-    @labels    = 'enhancement'
+    @labels    = 'bug'
     @sort      = 'comments'
     @direction = 'asc'
     @title     = 'title-' + Random.rand(9999).to_s
     @body      = 'body-' + Random.rand(9999).to_s
+    @number    = 42
+    @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
+    @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
   end
 
   describe 'list' do
@@ -47,6 +50,23 @@ describe 'github' do
         'body'     => @body
       }
       service_instance.test_action('create', params) do
+        expect_return
+      end
+    end
+  end
+
+  describe 'edit' do
+    it 'can update an issue' do
+      service_instance = service_instance('github_issues')
+      params = {
+        'api_key'  => @api_key,
+        'username' => @username,
+        'repo'     => @repo,
+        'title'    => @updated_title,
+        'body'     => @updated_body,
+        'number'   => @number
+      }
+      service_instance.test_action('edit', params) do
         expect_return
       end
     end
