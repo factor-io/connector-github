@@ -4,8 +4,8 @@ describe 'github_issues' do
 
   before(:all) do
     @api_key       = ENV['GITHUB_APIKEY']
-    @username      = 'andrewrdakers'
-    @repo          = 'test'
+    @username
+    @repo          = 'andrewrdakers/working_with_github_api'
     @filter        = 'created'
     @state         = 'closed'
     @since         = '2011-04-12T12:12:12Z'
@@ -19,6 +19,11 @@ describe 'github_issues' do
     @number        = 42
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
+    if @repo
+      @username, @repo = @repo.split('/') if @repo.include?('/') && !@username
+      @repo, @branch   = @repo.split('#') if @repo.include?('#') && !@branch
+      @branch         ||= 'master'
+    end
   end
 
   after(:all) do

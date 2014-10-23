@@ -48,7 +48,16 @@ Factor::Connector.service 'github_issues' do
     repo     = params['repo']
     number   = params['number']
 
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
+
     fail 'API key must be defined' unless api_key
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
 
     info 'Connecting to Github'
     begin
@@ -57,14 +66,14 @@ Factor::Connector.service 'github_issues' do
       'Unable to connect to Github'
     end
 
-    finding = {}
-    finding[:user] = username
-    finding[:repo] = repo
-    finding[:number] = number
+    payload = {}
+    payload[:user] = username
+    payload[:repo] = repo
+    payload[:number] = number
 
     info 'Updating issue'
     begin
-      github_wrapper = github.issues.get finding
+      github_wrapper = github.issues.get payload
       issue = github_wrapper.to_hash
     rescue
       fail 'Unable to find the issue'
@@ -82,8 +91,16 @@ Factor::Connector.service 'github_issues' do
     labels   = params['labels']
     assignee = params['assignee']
 
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
     fail 'API key must be defined' unless api_key
-    fail 'Title is required' unless title
+    fail 'Title must be defined' unless title
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
 
     info 'Connecting to Github'
     begin
@@ -123,8 +140,16 @@ Factor::Connector.service 'github_issues' do
     state    = params['state']
     labels   = params['labels']
 
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
     fail 'API key must be defined' unless api_key
-    fail 'Title is required' unless title
+    fail 'Title must be defined' unless title
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
 
     info 'Connecting to Github'
     begin
