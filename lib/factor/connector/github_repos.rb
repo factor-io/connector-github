@@ -230,7 +230,7 @@ Factor::Connector.service 'github_repos' do
     rescue => ex
       fail 'Failed to download the repo from Github', exception: ex
     end
-    
+
     action_callback response_data
   end
 end

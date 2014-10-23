@@ -21,6 +21,14 @@ describe 'github_issues' do
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
   end
 
+  # after(:all) do
+  #   @issue_numbers = []
+  #   github = Github.new oauth_token: @api_key
+  #   github_wrapper = github.issues.list user: @username, repo: @repo
+  #   issue = github_wrapper.to_hash
+  #   @number = issue.fetch['number'].last
+  # end
+
   describe 'list' do
     it 'can list all the issues' do
       service_instance = service_instance('github_issues')
@@ -36,7 +44,8 @@ describe 'github_issues' do
         'direction' => @direction
       }
       service_instance.test_action('list', params) do
-        expect_return
+        return_info = expect_return
+        expect(return_info).to be_a(Hash)
       end
     end
   end
@@ -51,7 +60,8 @@ describe 'github_issues' do
         'number'   => @number
       }
       service_instance.test_action('find', params) do
-        expect_return
+        return_info = expect_return
+        expect(return_info).to be_a(Hash)
       end
     end
   end
@@ -69,7 +79,8 @@ describe 'github_issues' do
         'assignee' => @assignee
       }
       service_instance.test_action('create', params) do
-        expect_return
+        return_info = expect_return
+        expect(return_info).to be_a(Hash)
       end
     end
   end
@@ -88,7 +99,8 @@ describe 'github_issues' do
         'number'   => @number
       }
       service_instance.test_action('edit', params) do
-        expect_return
+        return_info = expect_return
+        expect(return_info).to be_a(Hash)
       end
     end
   end

@@ -19,7 +19,7 @@ Factor::Connector.service 'github_issues' do
     begin
       github = Github.new oauth_token: api_key
     rescue
-      'Unable to connect to Github'
+      fail 'Unable to connect to Github'
     end
 
     payload = {
@@ -57,15 +57,13 @@ Factor::Connector.service 'github_issues' do
       'Unable to connect to Github'
     end
 
-    payload = {
-      user: username,
-      repo: repo,
-      number: number
-    }
-
-    github_wrapper = github.issues.get payload
-
-    issue = github_wrapper.to_hash
+    info 'Updating issue'
+    begin
+      github_wrapper = github.issues.get user: username, repo: repo, number: number
+      issue = github_wrapper.to_hash
+    rescue
+      fail 'Unable to find the issue'
+    end
 
     action_callback issue
   end
@@ -80,18 +78,19 @@ Factor::Connector.service 'github_issues' do
     assignee = params['assignee']
 
     fail 'API key must be defined' unless api_key
-    fail 'Issue must have a title' unless title
+    fail 'Title is required' unless title
 
     info 'Connecting to Github'
     begin
       github = Github.new oauth_token: api_key, user: username, repo: repo
     rescue
-      'Unable to connect to Github'
+      fail 'Unable to connect to Github'
     end
 
     info 'Creating new issue'
     begin
-      issue = github.issues.create title: title, body: body, assignee: assignee, labels: labels
+      github_wrapper = github.issues.create title: title, body: body, assignee: assignee, labels: labels
+      issue = github_wrapper.to_hash
     rescue
       fail 'Unable to create the issue'
     end
@@ -112,18 +111,25 @@ Factor::Connector.service 'github_issues' do
     labels   = params['labels']
 
     fail 'API key must be defined' unless api_key
-    fail 'Issue must have a title' unless title
+    fail 'Title is required' unless title
 
     info 'Connecting to Github'
     begin
       github = Github.new oauth_token: api_key, user: username, repo: repo
     rescue
-      'Unable to connect to Github'
+      fail 'Unable to connect to Github'
     end
+
+    update = {}
+    update[:title] = title if title
+    update[:body] = body if body
+    update[:state] = state if state
+    update[:labels] = labels if labels
 
     info 'Updating your issue'
     begin
-      issue = github.issues.edit username, repo, number, title: title, body: body, state: state, labels: labels
+      github_wrapper = github.issues.edit username, repo, number, update
+      issue = github_wrapper.to_hash
     rescue
       fail 'Unable to update the issue'
     end
