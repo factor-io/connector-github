@@ -42,6 +42,34 @@ Factor::Connector.service 'github_issues' do
     action_callback issues
   end
 
+  action 'find' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    number   = params['number']
+
+    fail 'API key must be defined' unless api_key
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key
+    rescue
+      'Unable to connect to Github'
+    end
+
+    payload = {
+      user: username,
+      repo: repo,
+      number: number
+    }
+
+    github_wrapper = github.issues.get payload
+
+    issue = github_wrapper.to_hash
+
+    action_callback issue
+  end
+
   action 'create' do |params|
     api_key  = params['api_key']
     username = params['username']

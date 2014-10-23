@@ -41,6 +41,21 @@ describe 'github' do
     end
   end
 
+  describe 'find' do
+    it 'can find a single issue' do
+      service_instance = service_instance('github_issues')
+      params = {
+        'api_key'  => @api_key,
+        'username' => @username,
+        'repo'     => @repo,
+        'number'   => @number
+      }
+      service_instance.test_action('find', params) do
+        expect_return
+      end
+    end
+  end
+
   describe 'create' do
     it 'can create a new issue' do
       service_instance = service_instance('github_issues')
