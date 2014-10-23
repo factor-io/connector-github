@@ -21,13 +21,16 @@ describe 'github_issues' do
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
   end
 
-  # after(:all) do
-  #   @issue_numbers = []
-  #   github = Github.new oauth_token: @api_key
-  #   github_wrapper = github.issues.list user: @username, repo: @repo
-  #   issue = github_wrapper.to_hash
-  #   @number = issue.fetch['number'].last
-  # end
+  after(:all) do
+    github = Github.new oauth_token: @api_key
+    github_wrapper = github.issues.list user: @username, repo: @repo
+    issues = []
+    github_wrapper.body.each { |mash| issues << mash.to_hash }
+    @closing_number = issues[0]['number']
+    # closing_number = current_number['number']
+    github_wrapper = github.issues.edit @username, @repo, @closing_number, state: @state
+
+  end
 
   describe 'list' do
     it 'can list all the issues' do

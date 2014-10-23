@@ -87,9 +87,15 @@ Factor::Connector.service 'github_issues' do
       fail 'Unable to connect to Github'
     end
 
+    payload = {}
+    payload[:title] = title
+    payload[:body] = body if body
+    payload[:assignee] = assignee if assignee
+    payload[:labels] = labels if labels
+
     info 'Creating new issue'
     begin
-      github_wrapper = github.issues.create title: title, body: body, assignee: assignee, labels: labels
+      github_wrapper = github.issues.create payload
       issue = github_wrapper.to_hash
     rescue
       fail 'Unable to create the issue'

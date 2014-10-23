@@ -17,6 +17,9 @@ describe 'github_repos' do
       service_instance.test_action('download', @params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
+        expect(return_info[:payload]).to include(:content)
       end
     end
   end
