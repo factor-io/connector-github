@@ -4,8 +4,8 @@ describe 'github_issues' do
 
   before(:all) do
     @api_key       = ENV['GITHUB_APIKEY']
-    @username      = 'andrewrdakers'
-    @repo          = 'working_with_github_api'
+    @username      = 'skierkowski'
+    @repo          = 'hello'
     @filter        = 'created'
     @state         = 'closed'
     @since         = '2011-04-12T12:12:12Z'
@@ -15,7 +15,7 @@ describe 'github_issues' do
     @direction     = 'asc'
     @title         = 'title-' + Random.rand(9999).to_s
     @body          = 'body-' + Random.rand(9999).to_s
-    @assignee      = 'andrewrdakers'
+    @assignee      = 'skierkowski'
     @number        = 42
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
@@ -28,7 +28,6 @@ describe 'github_issues' do
     github_wrapper.body.each { |mash| issues << mash.to_hash }
     @closing_number = issues[0]['number']
     github_wrapper = github.issues.edit @username, @repo, @closing_number, state: @state
-
   end
 
   describe 'list' do
