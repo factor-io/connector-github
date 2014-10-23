@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'github' do
+describe 'github_issues' do
 
   before(:all) do
     @api_key       = ENV['GITHUB_APIKEY']

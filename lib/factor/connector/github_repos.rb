@@ -22,7 +22,7 @@ github_events = [
   'team_add',
   'watch']
 
-Factor::Connector.service 'github' do
+Factor::Connector.service 'github_repos' do
   github_events.each do |github_event|
     listener github_event do
       start do |params|
@@ -230,7 +230,7 @@ Factor::Connector.service 'github' do
     rescue => ex
       fail 'Failed to download the repo from Github', exception: ex
     end
-
+    
     action_callback response_data
   end
 end
