@@ -3,19 +3,20 @@ require 'spec_helper'
 describe 'github' do
 
   before(:all) do
-    @api_key   = ENV['GITHUB_APIKEY']
-    @username  = 'andrewrdakers'
-    @repo      = 'working_with_github_api'
-    @filter    = 'created'
-    @state     = 'closed'
-    @since     = '2011-04-12T12:12:12Z'
-    @labels    = 'bug' #unable to pass in multiple labels
-    @sort      = 'comments'
-    @direction = 'asc'
-    @title     = 'title-' + Random.rand(9999).to_s
-    @body      = 'body-' + Random.rand(9999).to_s
-    @assignee  = 'andrewrdakers'
-    @number    = 42
+    @api_key       = ENV['GITHUB_APIKEY']
+    @username      = 'andrewrdakers'
+    @repo          = 'working_with_github_api'
+    @filter        = 'created'
+    @state         = 'closed'
+    @since         = '2011-04-12T12:12:12Z'
+    @find_labels   = ['bug','wontfix']
+    @list_labels   = 'bug,enhancement'
+    @sort          = 'comments'
+    @direction     = 'asc'
+    @title         = 'title-' + Random.rand(9999).to_s
+    @body          = 'body-' + Random.rand(9999).to_s
+    @assignee      = 'andrewrdakers'
+    @number        = 42
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
   end
@@ -30,7 +31,7 @@ describe 'github' do
         'filter'    => @filter,
         'state'     => @state,
         'since'     => @since,
-        'labels'    => @labels,
+        'labels'    => @list_labels,
         'sort'      => @sort,
         'direction' => @direction
       }
@@ -49,7 +50,7 @@ describe 'github' do
         'repo'     => @repo,
         'title'    => @title,
         'body'     => @body,
-        'labels'   => @labels,
+        'labels'   => @find_labels,
         'assignee' => @assignee
       }
       service_instance.test_action('create', params) do
@@ -68,6 +69,7 @@ describe 'github' do
         'title'    => @updated_title,
         'body'     => @updated_body,
         'state'    => @state,
+        'labels'   => @find_labels,
         'number'   => @number
       }
       service_instance.test_action('edit', params) do

@@ -81,6 +81,7 @@ Factor::Connector.service 'github_issues' do
     body     = params['body']
     number   = params['number']
     state    = params['state']
+    labels   = params['labels']
 
     fail 'API key must be defined' unless api_key
     fail 'Issue must have a title' unless title
@@ -94,7 +95,7 @@ Factor::Connector.service 'github_issues' do
 
     info 'Updating your issue'
     begin
-      issue = github.issues.edit username, repo, number, title: title, body: body, state: state
+      issue = github.issues.edit username, repo, number, title: title, body: body, state: state, labels: labels
     rescue
       fail 'Unable to update the issue'
     end
