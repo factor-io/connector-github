@@ -9,11 +9,12 @@ describe 'github' do
     @filter    = 'created'
     @state     = 'closed'
     @since     = '2011-04-12T12:12:12Z'
-    @labels    = 'bug'
+    @labels    = 'bug' #unable to pass in multiple labels
     @sort      = 'comments'
     @direction = 'asc'
     @title     = 'title-' + Random.rand(9999).to_s
     @body      = 'body-' + Random.rand(9999).to_s
+    @assignee  = 'andrewrdakers'
     @number    = 42
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
@@ -47,7 +48,9 @@ describe 'github' do
         'username' => @username,
         'repo'     => @repo,
         'title'    => @title,
-        'body'     => @body
+        'body'     => @body,
+        'labels'   => @labels,
+        'assignee' => @assignee
       }
       service_instance.test_action('create', params) do
         expect_return
@@ -64,6 +67,7 @@ describe 'github' do
         'repo'     => @repo,
         'title'    => @updated_title,
         'body'     => @updated_body,
+        'state'    => @state,
         'number'   => @number
       }
       service_instance.test_action('edit', params) do

@@ -36,7 +36,7 @@ Factor::Connector.service 'github_issues' do
     github_wrapper = github.issues.list payload
 
     issues = []
-    
+
     github_wrapper.body.each { |mash| issues << mash.to_hash }
 
     action_callback issues
@@ -48,6 +48,8 @@ Factor::Connector.service 'github_issues' do
     repo     = params['repo']
     title    = params['title']
     body     = params['body']
+    labels   = params['labels']
+    assignee = params['assignee']
 
     fail 'API key must be defined' unless api_key
     fail 'Issue must have a title' unless title
@@ -61,7 +63,7 @@ Factor::Connector.service 'github_issues' do
 
     info 'Creating new issue'
     begin
-      issue = github.issues.create title: title, body: body
+      issue = github.issues.create title: title, body: body, assignee: assignee, labels: labels
     rescue
       fail 'Unable to create the issue'
     end
@@ -78,6 +80,7 @@ Factor::Connector.service 'github_issues' do
     title    = params['title']
     body     = params['body']
     number   = params['number']
+    state    = params['state']
 
     fail 'API key must be defined' unless api_key
     fail 'Issue must have a title' unless title
@@ -91,7 +94,7 @@ Factor::Connector.service 'github_issues' do
 
     info 'Updating your issue'
     begin
-      issue = github.issues.edit username, repo, number, title: title, body: body
+      issue = github.issues.edit username, repo, number, title: title, body: body, state: state
     rescue
       fail 'Unable to update the issue'
     end
