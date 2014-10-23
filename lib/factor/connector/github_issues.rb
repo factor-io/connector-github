@@ -57,9 +57,14 @@ Factor::Connector.service 'github_issues' do
       'Unable to connect to Github'
     end
 
+    finding = {}
+    finding[:user] = username
+    finding[:repo] = repo
+    finding[:number] = number
+
     info 'Updating issue'
     begin
-      github_wrapper = github.issues.get user: username, repo: repo, number: number
+      github_wrapper = github.issues.get finding
       issue = github_wrapper.to_hash
     rescue
       fail 'Unable to find the issue'
@@ -82,12 +87,14 @@ Factor::Connector.service 'github_issues' do
 
     info 'Connecting to Github'
     begin
-      github = Github.new oauth_token: api_key, user: username, repo: repo
+      github = Github.new oauth_token: api_key
     rescue
       fail 'Unable to connect to Github'
     end
 
     payload = {}
+    payload[:user] = username
+    payload[:repo] = repo
     payload[:title] = title
     payload[:body] = body if body
     payload[:assignee] = assignee if assignee
@@ -121,7 +128,7 @@ Factor::Connector.service 'github_issues' do
 
     info 'Connecting to Github'
     begin
-      github = Github.new oauth_token: api_key, user: username, repo: repo
+      github = Github.new oauth_token: api_key
     rescue
       fail 'Unable to connect to Github'
     end

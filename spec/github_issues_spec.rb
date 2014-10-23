@@ -27,7 +27,6 @@ describe 'github_issues' do
     issues = []
     github_wrapper.body.each { |mash| issues << mash.to_hash }
     @closing_number = issues[0]['number']
-    # closing_number = current_number['number']
     github_wrapper = github.issues.edit @username, @repo, @closing_number, state: @state
 
   end
