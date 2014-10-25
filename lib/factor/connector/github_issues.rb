@@ -19,7 +19,7 @@ Factor::Connector.service 'github_issues' do
     begin
       github = Github.new oauth_token: api_key
     rescue
-      'Unable to connect to Github'
+      fail 'Unable to connect to Github'
     end
 
     payload = {
@@ -33,9 +33,53 @@ Factor::Connector.service 'github_issues' do
       direction: direction
     }
 
-    issues = github.issues.list payload
+    github_wrapper = github.issues.list payload
+
+    issues = []
+
+    github_wrapper.body.each { |mash| issues << mash.to_hash }
 
     action_callback issues
+  end
+
+  action 'find' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    number   = params['number']
+
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
+
+    fail 'API key must be defined' unless api_key
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key
+    rescue
+      'Unable to connect to Github'
+    end
+
+    payload = {}
+    payload[:user] = username
+    payload[:repo] = repo
+    payload[:number] = number
+
+    info 'Updating issue'
+    begin
+      github_wrapper = github.issues.get payload
+      issue = github_wrapper.to_hash
+    rescue
+      fail 'Unable to find the issue'
+    end
+
+    action_callback issue
   end
 
   action 'create' do |params|
@@ -44,25 +88,91 @@ Factor::Connector.service 'github_issues' do
     repo     = params['repo']
     title    = params['title']
     body     = params['body']
+    labels   = params['labels']
+    assignee = params['assignee']
+
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
 
     fail 'API key must be defined' unless api_key
-    fail 'Issue must have a title' unless title
+    fail 'Title must be defined' unless title
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
 
     info 'Connecting to Github'
     begin
-      github = Github.new oauth_token: api_key, user: username, repo: repo
+      github = Github.new oauth_token: api_key
     rescue
-      'Unable to connect to Github'
+      fail 'Unable to connect to Github'
     end
+
+    payload = {}
+    payload[:user] = username
+    payload[:repo] = repo
+    payload[:title] = title
+    payload[:body] = body if body
+    payload[:assignee] = assignee if assignee
+    payload[:labels] = labels if labels
 
     info 'Creating new issue'
     begin
-      issue = github.issues.create title: title, body: body
+      github_wrapper = github.issues.create payload
+      issue = github_wrapper.to_hash
     rescue
       fail 'Unable to create the issue'
     end
 
     info 'Issue has been created'
+
+    action_callback issue
+  end
+
+  action 'edit' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    title    = params['title']
+    body     = params['body']
+    number   = params['number']
+    state    = params['state']
+    labels   = params['labels']
+
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
+    fail 'API key must be defined' unless api_key
+    fail 'Title must be defined' unless title
+    fail 'Username must be defined' unless username
+    fail 'Repository must be defined' unless repo
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key
+    rescue
+      fail 'Unable to connect to Github'
+    end
+
+    update = {}
+    update[:title] = title if title
+    update[:body] = body if body
+    update[:state] = state if state
+    update[:labels] = labels if labels
+
+    info 'Updating your issue'
+    begin
+      github_wrapper = github.issues.edit username, repo, number, update
+      issue = github_wrapper.to_hash
+    rescue
+      fail 'Unable to update the issue'
+    end
+
+    info 'Issue has been updated'
 
     action_callback issue
   end

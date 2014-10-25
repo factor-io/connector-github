@@ -22,7 +22,7 @@ github_events = [
   'team_add',
   'watch']
 
-Factor::Connector.service 'github' do
+Factor::Connector.service 'github_repos' do
   github_events.each do |github_event|
     listener github_event do
       start do |params|
