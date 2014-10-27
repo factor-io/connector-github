@@ -176,4 +176,40 @@ Factor::Connector.service 'github_issues' do
 
     action_callback issue
   end
+
+  action 'close' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    number   = params['id']
+
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
+    fail 'API key must be defined' unless api_key
+    fail 'Username must be defined' unless api_key
+    fail 'Repository must be defined' unless repo
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key
+    rescue
+      fail 'unable to connect to Github'
+    end
+
+    info 'Closing the issue'
+    begin
+      github_wrapper = github.issues.edit username, repo, number, state: 'closed'
+      issue = github_wrapper.to_hash
+    rescue
+      fail 'Unable to close the issue'
+    end
+
+    info 'Issue has been closed'
+
+    action_callback issue
+  end
 end

@@ -16,8 +16,7 @@ describe 'github_issues' do
     @direction     = 'asc'
     @title         = 'title-' + Random.rand(9999).to_s
     @body          = 'body-' + Random.rand(9999).to_s
-    @assignee      = 'andrewrdakers'
-    @id            = 42
+    @assignee      = @username
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
     if @repo
@@ -27,13 +26,20 @@ describe 'github_issues' do
     end
   end
 
-  after(:all) do
-    github = Github.new oauth_token: @api_key
-    github_wrapper = github.issues.list user: @username, repo: @repo
+  before(:each) do
     issues = []
-    github_wrapper.body.each { |mash| issues << mash.to_hash }
-    @closing_number = issues[0]['number']
-    github_wrapper = github.issues.edit @username, @repo, @closing_number, state: @state
+    payload = {}
+    payload[:user] = @username
+    payload[:repo] = @repo
+    payload[:title] = @title
+    @github = Github.new oauth_token: @api_key
+    github_wrapper = @github.issues.create payload
+    issues << github_wrapper.to_hash
+    @id = issues[0]['number']
+  end
+
+  after(:each) do
+    github_wrapper = @github.issues.edit @username, @repo, @id, state: 'closed'
   end
 
   describe 'list' do
@@ -53,6 +59,8 @@ describe 'github_issues' do
       service_instance.test_action('list', params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
       end
     end
   end
@@ -69,6 +77,8 @@ describe 'github_issues' do
       service_instance.test_action('get', params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
       end
     end
   end
@@ -88,6 +98,8 @@ describe 'github_issues' do
       service_instance.test_action('create', params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
       end
     end
   end
@@ -108,6 +120,27 @@ describe 'github_issues' do
       service_instance.test_action('edit', params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
+      end
+    end
+  end
+
+  describe 'close' do
+    it 'will close an issue' do
+      service_instance = service_instance('github_issues')
+      params = {
+        'api_key'  => @api_key,
+        'username' => @username,
+        'repo'     => @repo,
+        'id'       => @id,
+        'state'    => @state
+      }
+      service_instance.test_action('close', params) do
+        return_info = expect_return
+        expect(return_info).to be_a(Hash)
+        expect(return_info).to include(:payload)
+        expect(return_info[:payload]).to be_a(Hash)
       end
     end
   end
