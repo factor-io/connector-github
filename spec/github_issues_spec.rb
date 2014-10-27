@@ -60,7 +60,7 @@ describe 'github_issues' do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
         expect(return_info).to include(:payload)
-        expect(return_info[:payload]).to be_a(Hash)
+        expect(return_info[:payload]).to be_a(Array)
       end
     end
   end

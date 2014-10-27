@@ -33,11 +33,14 @@ Factor::Connector.service 'github_issues' do
       direction: direction
     }
 
-    github_wrapper = github.issues.list payload
-
-    issues = []
-
-    github_wrapper.body.each { |mash| issues << mash.to_hash }
+    info 'Getting all issues'
+    begin
+      issues = []
+      github_wrapper = github.issues.list payload
+      github_wrapper.body.each { |mash| issues << mash.to_hash }
+    rescue
+      fail 'Unable to get the issues'
+    end
 
     action_callback issues
   end
