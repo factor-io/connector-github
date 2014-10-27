@@ -46,7 +46,7 @@ Factor::Connector.service 'github_issues' do
     api_key  = params['api_key']
     username = params['username']
     repo     = params['repo']
-    number   = params['number']
+    id       = params['id']
 
     if repo
       username, repo = repo.split('/') if repo.include?('/') && !username
@@ -69,7 +69,7 @@ Factor::Connector.service 'github_issues' do
     payload = {}
     payload[:user] = username
     payload[:repo] = repo
-    payload[:number] = number
+    payload[:number] = id
 
     info 'Updating issue'
     begin
@@ -136,7 +136,7 @@ Factor::Connector.service 'github_issues' do
     repo     = params['repo']
     title    = params['title']
     body     = params['body']
-    number   = params['number']
+    number   = params['id']
     state    = params['state']
     labels   = params['labels']
 

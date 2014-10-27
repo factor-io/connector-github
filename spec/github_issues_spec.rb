@@ -17,7 +17,7 @@ describe 'github_issues' do
     @title         = 'title-' + Random.rand(9999).to_s
     @body          = 'body-' + Random.rand(9999).to_s
     @assignee      = 'andrewrdakers'
-    @number        = 42
+    @id            = 42
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
     if @repo
@@ -64,7 +64,7 @@ describe 'github_issues' do
         'api_key'  => @api_key,
         'username' => @username,
         'repo'     => @repo,
-        'number'   => @number
+        'id'   => @id
       }
       service_instance.test_action('get', params) do
         return_info = expect_return
@@ -103,7 +103,7 @@ describe 'github_issues' do
         'body'     => @updated_body,
         'state'    => @state,
         'labels'   => @find_labels,
-        'number'   => @number
+        'id'       => @id
       }
       service_instance.test_action('edit', params) do
         return_info = expect_return
