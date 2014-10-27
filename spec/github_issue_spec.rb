@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'github_issues' do
+describe 'github_issue' do
 
   before(:all) do
     @api_key       = ENV['GITHUB_APIKEY']
@@ -44,7 +44,7 @@ describe 'github_issues' do
 
   describe 'list' do
     it 'can list all the issues' do
-      service_instance = service_instance('github_issues')
+      service_instance = service_instance('github_issue')
       params = {
         'api_key'   => @api_key,
         'username'  => @username,
@@ -67,12 +67,12 @@ describe 'github_issues' do
 
   describe 'get' do
     it 'can find a single issue' do
-      service_instance = service_instance('github_issues')
+      service_instance = service_instance('github_issue')
       params = {
         'api_key'  => @api_key,
         'username' => @username,
         'repo'     => @repo,
-        'id'   => @id
+        'id'       => @id
       }
       service_instance.test_action('get', params) do
         return_info = expect_return
@@ -85,7 +85,7 @@ describe 'github_issues' do
 
   describe 'create' do
     it 'can create a new issue' do
-      service_instance = service_instance('github_issues')
+      service_instance = service_instance('github_issue')
       params = {
         'api_key'  => @api_key,
         'username' => @username,
@@ -106,7 +106,7 @@ describe 'github_issues' do
 
   describe 'edit' do
     it 'can update an issue' do
-      service_instance = service_instance('github_issues')
+      service_instance = service_instance('github_issue')
       params = {
         'api_key'  => @api_key,
         'username' => @username,
@@ -128,7 +128,7 @@ describe 'github_issues' do
 
   describe 'close' do
     it 'will close an issue' do
-      service_instance = service_instance('github_issues')
+      service_instance = service_instance('github_issue')
       params = {
         'api_key'  => @api_key,
         'username' => @username,

@@ -1,7 +1,7 @@
 require 'factor-connector-api'
 require 'github_api'
 
-Factor::Connector.service 'github_issues' do
+Factor::Connector.service 'github_issue' do
   action 'list' do |params|
     api_key   = params['api_key']
     username  = params['username']
