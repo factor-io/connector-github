@@ -5,11 +5,12 @@ describe 'github_issues' do
   before(:all) do
     @api_key       = ENV['GITHUB_APIKEY']
     @username
+    @branch
     @repo          = 'andrewrdakers/working_with_github_api'
     @filter        = 'created'
     @state         = 'closed'
     @since         = '2011-04-12T12:12:12Z'
-    @find_labels   = ['bug','wontfix']
+    @find_labels   = ['bug', 'wontfix']
     @list_labels   = 'bug,enhancement'
     @sort          = 'comments'
     @direction     = 'asc'
@@ -56,7 +57,7 @@ describe 'github_issues' do
     end
   end
 
-  describe 'find' do
+  describe 'get' do
     it 'can find a single issue' do
       service_instance = service_instance('github_issues')
       params = {
@@ -65,7 +66,7 @@ describe 'github_issues' do
         'repo'     => @repo,
         'number'   => @number
       }
-      service_instance.test_action('find', params) do
+      service_instance.test_action('get', params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
       end

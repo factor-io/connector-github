@@ -42,7 +42,7 @@ Factor::Connector.service 'github_issues' do
     action_callback issues
   end
 
-  action 'find' do |params|
+  action 'get' do |params|
     api_key  = params['api_key']
     username = params['username']
     repo     = params['repo']
@@ -76,7 +76,7 @@ Factor::Connector.service 'github_issues' do
       github_wrapper = github.issues.get payload
       issue = github_wrapper.to_hash
     rescue
-      fail 'Unable to find the issue'
+      fail 'Unable to get the issue'
     end
 
     action_callback issue
