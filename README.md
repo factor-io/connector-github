@@ -1,10 +1,10 @@
 factor-connector-github
 ======================
-[![Code Climate](https://codeclimate.com/github/factor-io/connector-heroku/badges/gpa.svg)](https://codeclimate.com/github/factor-io/connector-heroku)
+[![Code Climate](https://codeclimate.com/github/factor-io/connector-github/badges/gpa.svg)](https://codeclimate.com/github/factor-io/connector-github)
 [![Test Coverage](https://codeclimate.com/github/factor-io/connector-github/badges/coverage.svg)](https://codeclimate.com/github/factor-io/connector-github)
 [![Build Status](https://travis-ci.org/factor-io/connector-github.svg?branch=master)](https://travis-ci.org/factor-io/connector-github)
-[![Dependency Status](https://gemnasium.com/factor-io/connector-heroku.svg)](https://gemnasium.com/factor-io/connector-heroku)
-[![Gem Version](https://badge.fury.io/rb/factor-connector-heroku.svg)](http://badge.fury.io/rb/factor-connector-heroku)
+[![Dependency Status](https://gemnasium.com/factor-io/connector-github.svg)](https://gemnasium.com/factor-io/connector-github)
+[![Gem Version](https://badge.fury.io/rb/factor-connector-github.svg)](http://badge.fury.io/rb/factor-connector-github)
 
 #####api_key https://github.com/settings/applications
 #####repo_name
