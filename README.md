@@ -7,6 +7,8 @@ factor-connector-github
 [![Gem Version](https://badge.fury.io/rb/factor-connector-github.svg)](http://badge.fury.io/rb/factor-connector-github)
 
 #####api_key https://github.com/settings/applications
+
+#####issues https://developer.github.com/v3/issues/
 #####repo_name
 #####username
 #####filters: assigned, created, mentioned, subscribed, all - default: assigned
@@ -15,3 +17,6 @@ factor-connector-github
 #####labels: A list of comma separated label names. Example: bug,ui,@high
 #####sort: created, updated, comments
 #####direction: asc, desc - default: desc
+
+#####repos https://developer.github.com/v3/repos/
+#####List your repositories, params = {type, sort, direction}

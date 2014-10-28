@@ -1,7 +1,7 @@
 require 'factor-connector-api'
 require 'github_api'
 
-Factor::Connector.service 'github_issues' do
+Factor::Connector.service 'github_issue' do
   action 'list' do |params|
     api_key   = params['api_key']
     username  = params['username']
@@ -33,20 +33,23 @@ Factor::Connector.service 'github_issues' do
       direction: direction
     }
 
-    github_wrapper = github.issues.list payload
-
-    issues = []
-
-    github_wrapper.body.each { |mash| issues << mash.to_hash }
+    info 'Getting all issues'
+    begin
+      issues = []
+      github_wrapper = github.issues.list payload
+      github_wrapper.body.each { |mash| issues << mash.to_hash }
+    rescue
+      fail 'Unable to get the issues'
+    end
 
     action_callback issues
   end
 
-  action 'find' do |params|
+  action 'get' do |params|
     api_key  = params['api_key']
     username = params['username']
     repo     = params['repo']
-    number   = params['number']
+    id       = params['id']
 
     if repo
       username, repo = repo.split('/') if repo.include?('/') && !username
@@ -69,14 +72,14 @@ Factor::Connector.service 'github_issues' do
     payload = {}
     payload[:user] = username
     payload[:repo] = repo
-    payload[:number] = number
+    payload[:number] = id
 
     info 'Updating issue'
     begin
       github_wrapper = github.issues.get payload
       issue = github_wrapper.to_hash
     rescue
-      fail 'Unable to find the issue'
+      fail 'Unable to get the issue'
     end
 
     action_callback issue
@@ -136,7 +139,7 @@ Factor::Connector.service 'github_issues' do
     repo     = params['repo']
     title    = params['title']
     body     = params['body']
-    number   = params['number']
+    number   = params['id']
     state    = params['state']
     labels   = params['labels']
 
@@ -173,6 +176,42 @@ Factor::Connector.service 'github_issues' do
     end
 
     info 'Issue has been updated'
+
+    action_callback issue
+  end
+
+  action 'close' do |params|
+    api_key  = params['api_key']
+    username = params['username']
+    repo     = params['repo']
+    number   = params['id']
+
+    if repo
+      username, repo = repo.split('/') if repo.include?('/') && !username
+      repo, branch   = repo.split('#') if repo.include?('#') && !branch
+      branch         ||= 'master'
+    end
+
+    fail 'API key must be defined' unless api_key
+    fail 'Username must be defined' unless api_key
+    fail 'Repository must be defined' unless repo
+
+    info 'Connecting to Github'
+    begin
+      github = Github.new oauth_token: api_key
+    rescue
+      fail 'unable to connect to Github'
+    end
+
+    info 'Closing the issue'
+    begin
+      github_wrapper = github.issues.edit username, repo, number, state: 'closed'
+      issue = github_wrapper.to_hash
+    rescue
+      fail 'Unable to close the issue'
+    end
+
+    info 'Issue has been closed'
 
     action_callback issue
   end

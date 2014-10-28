@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'github_repos' do
+describe 'github_repo' do
 
   before(:all) do
     @params = {
@@ -12,7 +12,7 @@ describe 'github_repos' do
 
   describe 'download' do
     it 'can download a repo' do
-      service_instance = service_instance('github_repos')
+      service_instance = service_instance('github_repo')
       @params
       service_instance.test_action('download', @params) do
         return_info = expect_return
