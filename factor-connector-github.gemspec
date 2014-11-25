@@ -3,13 +3,13 @@ $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = 'factor-connector-github'
-  s.version       = '0.0.2'
+  s.version       = '0.0.3'
   s.platform      = Gem::Platform::RUBY
   s.authors       = ['Maciej Skierkowski', 'Andrew Akers']
   s.email         = ['maciej@factor.io', 'andrewrdakers@gmail.com']
   s.homepage      = 'https://factor.io'
   s.summary       = 'Github Factor.io Connector'
-  s.files         = ['lib/factor/connector/github.rb']
+  s.files         = Dir.glob('lib/factor/connector/*.rb')
 
   s.require_paths = ['lib']
 
