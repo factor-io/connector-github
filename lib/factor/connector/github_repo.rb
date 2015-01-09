@@ -30,6 +30,7 @@ Factor::Connector.service 'github_repo' do
         username       = params['username']
         repo           = params['repo']
         branch         = params['branch']
+        archive_format = params['archive_format'] || 'tarball'
 
         if repo
           username, repo = repo.split('/') if repo.include?('/') && !username
@@ -70,7 +71,7 @@ Factor::Connector.service 'github_repo' do
                 github_repo = github.repos.get(repo_reference)
                 archive_url_template = github_repo.archive_url
                 uri_string = archive_url_template
-                  .sub('{archive_format}', 'zipball')
+                  .sub('{archive_format}', archive_format)
                   .sub('{/ref}', "/#{branch}")
                 download_ref_uri = URI(uri_string)
               rescue => ex
@@ -181,6 +182,7 @@ Factor::Connector.service 'github_repo' do
     username       = params['username']
     repo           = params['repo']
     branch         = params['branch']
+    archive_format = params['archive_format'] || 'tarball'
 
     if repo
       username, repo = repo.split('/') if repo.include?('/') && !username
@@ -208,7 +210,7 @@ Factor::Connector.service 'github_repo' do
       github_repo = github.repos.get(repo_reference)
       archive_url_template = github_repo.archive_url
       uri_string = archive_url_template
-        .sub('{archive_format}', 'zipball')
+        .sub('{archive_format}', archive_format)
         .sub('{/ref}', "/#{branch}")
       download_ref_uri = URI(uri_string)
     rescue => ex
