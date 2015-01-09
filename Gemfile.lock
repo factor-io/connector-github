@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    factor-connector-github (0.0.3)
+    factor-connector-github (0.0.5)
       factor-connector-api (~> 0.0.13)
       github_api (~> 0.11.3)
 
