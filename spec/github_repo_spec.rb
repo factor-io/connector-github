@@ -4,8 +4,8 @@ describe 'github_repo' do
 
   before(:all) do
     @params = {
-      'api_key' => ENV['GITHUB_APIKEY'],
-      'repo'    => 'andrewrdakers/working_with_github_api',
+      'api_key' => @api_key,
+      'repo'    => 'skierkowski/hello',
       'branch'  => 'master'
     }
   end
