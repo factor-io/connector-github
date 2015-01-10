@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'github_repo' do
 
   before(:all) do
+    @api_key = ENV['GITHUB_API_KEY']
     @params = {
       'api_key' => @api_key,
       'username' => 'skierkowski',
