@@ -5,8 +5,8 @@ describe 'github_issue' do
   before(:all) do
     @api_key       = ENV['GITHUB_API_KEY']
     @username      = 'skierkowski'
+    @repo          = 'hello'
     @branch        = 'master'
-    @repo          = 'skierkowski/hello'
     @filter        = 'created'
     @state         = 'closed'
     @since         = '2011-04-12T12:12:12Z'
@@ -19,11 +19,6 @@ describe 'github_issue' do
     @assignee      = @username
     @updated_title = @title + ' updated_title- ' + Random.rand(9999).to_s
     @updated_body  = @body + ' updated_body- ' + Random.rand(9999).to_s
-    if @repo
-      @username, @repo = @repo.split('/') if @repo.include?('/') && !@username
-      @repo, @branch   = @repo.split('#') if @repo.include?('#') && !@branch
-      @branch         ||= 'master'
-    end
   end
 
   before(:each) do

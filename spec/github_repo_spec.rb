@@ -5,7 +5,8 @@ describe 'github_repo' do
   before(:all) do
     @params = {
       'api_key' => @api_key,
-      'repo'    => 'skierkowski/hello',
+      'username' => 'skierkowski',
+      'repo'    => 'hello',
       'branch'  => 'master'
     }
   end
@@ -13,7 +14,6 @@ describe 'github_repo' do
   describe 'download' do
     it 'can download a repo' do
       service_instance = service_instance('github_repo')
-      @params
       service_instance.test_action('download', @params) do
         return_info = expect_return
         expect(return_info).to be_a(Hash)
