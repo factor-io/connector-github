@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'github_issue' do
 
   before(:all) do
-    @api_key       = ENV['GITHUB_APIKEY']
-    @username
-    @branch
-    @repo          = 'andrewrdakers/working_with_github_api'
+    @api_key       = ENV['GITHUB_API_KEY']
+    @username      = 'skierkowski'
+    @branch        = 'master'
+    @repo          = 'skierkowski/hello'
     @filter        = 'created'
     @state         = 'closed'
     @since         = '2011-04-12T12:12:12Z'
