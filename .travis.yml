@@ -3,5 +3,5 @@ rvm:
 - 1.9.3
 env:
   global:
-  - secure: ek8nwwS0Sxch6ou/6EuBEt66vBHLMJMYNNXcvE0kU964FarXEDsmDZoR/sAj4ziPN9kMykQrsZT4Hj5VLcBP9xRAIMH1zrl3vGKawWgOzndXWnd8z8UMszaDYeEIKByu+zJ+8kQQ9+kHPujQUpWlFp4sgUqOotwj5E62EmPKCPw=
+  - secure: hz+MHfMKeOgDA6JgvLZsCJEypVkOLYvE+1hih69WNIHs5Fn55zrA4xpowbUnxV8s2vMdLYWeATMmkEORy2fyn7KdiEhWAIapLpk8SnfJvCshuivZ19vB1ylHERbITGetcrP0/xiPR+wdW4L8DIFJ34uvJP27Gv3MeMTmUslLF4s=
   - secure: XcQVpkJEe+C2aZ7CAEYssl3knjz+ikFRSiVtVqa9pPTfGgeNrYPAUdHRPf8+wlYmaGz/KISeRvwCHpq7weDkZbgVMspRKvwcMWeUOvuAvZSuo5VKF4CDkGVRH4CA7Px5szNpSl2JV12dwcn0FZc3KGszVT6epjxjzIaqqCHPMTU=
