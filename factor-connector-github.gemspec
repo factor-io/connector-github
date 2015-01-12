@@ -3,7 +3,7 @@ $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = 'factor-connector-github'
-  s.version       = '0.0.5'
+  s.version       = '0.0.6'
   s.platform      = Gem::Platform::RUBY
   s.authors       = ['Maciej Skierkowski', 'Andrew Akers']
   s.email         = ['maciej@factor.io', 'andrewrdakers@gmail.com']
