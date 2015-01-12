@@ -85,7 +85,6 @@ Factor::Connector.service 'github_releases' do
 
     begin
       release = github.repos.releases.create username, repo, tag_name, tag_params
-      # release = github.repos.releases.create username, repo, tag_name, prerelease: true
     rescue
       fail 'Failed to tag the release'
     end
