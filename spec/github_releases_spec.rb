@@ -8,6 +8,8 @@ describe 'Github' do
     end
 
     it 'can list all releases' do      
+      github = Github.new oauth_token: @api_key
+      release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}"
       params = {
         'api_key' => @api_key,
         'username' => 'skierkowski',
@@ -20,11 +22,12 @@ describe 'Github' do
           expect(release).to be_a(Hash)
         end
       end
+      github.repos.releases.delete 'skierkowski', 'hello', release.id
     end
 
     it 'can get a release by id' do
       github = Github.new oauth_token: @api_key
-      release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:'Test for test'
+      release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}"
       params = {
         'api_key'  => @api_key,
         'username' => 'skierkowski',
@@ -35,6 +38,8 @@ describe 'Github' do
         return_info = expect_return[:payload]
         expect(return_info).to be_a(Hash)
       end
+
+      github.repos.releases.delete 'skierkowski', 'hello', release.id
     end
 
     it 'can create a release' do
@@ -44,7 +49,7 @@ describe 'Github' do
         'api_key'    => @api_key,
         'username'   => 'skierkowski',
         'repo'       => 'hello',
-        'name'       => 'Release for v0.0.2',
+        'name'       => "Test Release for #{SecureRandom.hex(4)}",
         'tag_name'   => 'test',
         'prerelease' => true
       }
@@ -57,7 +62,7 @@ describe 'Github' do
 
     it 'can delete a release' do
       github = Github.new oauth_token: @api_key
-      release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:'Test for test', prerelease: true
+      release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}", prerelease: true
 
       params = {
         'api_key'  => @api_key,
