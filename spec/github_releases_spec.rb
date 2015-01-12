@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'Github' do
   describe 'Releases' do
     before(:all) do
+      @api_key = ENV['GITHUB_API_KEY']
       @scope = service_instance('github_releases')
     end
 
@@ -40,11 +41,11 @@ describe 'Github' do
       github = Github.new oauth_token: @api_key
 
       params = {
-        'api_key'  => @api_key,
-        'username' => 'skierkowski',
-        'repo'     => 'hello',
-        'name'     => 'Release for v0.0.2',
-        'tag_name' => 'test',
+        'api_key'    => @api_key,
+        'username'   => 'skierkowski',
+        'repo'       => 'hello',
+        'name'       => 'Release for v0.0.2',
+        'tag_name'   => 'test',
         'prerelease' => true
       }
       @scope.test_action('create', params) do
