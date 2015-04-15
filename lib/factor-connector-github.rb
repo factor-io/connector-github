@@ -34,6 +34,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
 
   def init_github(params)
     api_key = load_and_validate(params,:api_key, required:true)
+    github  = nil
 
     info 'Connecting to Github'
     begin
@@ -64,16 +65,19 @@ class GithubConnectorDefinition < Factor::Connector::Definition
   def wrap_call(entity, action, &block)
 
     terms = {
+      close:    ['close', 'closing', 'closed'],
       create:   ['create', 'creating', 'created'],
       delete:   ['delete', 'deleting', 'deleted'],
-      update:   ['update', 'updating', 'updated'],
+      download: ['download','downloading', 'downloaded'],
       edit:     ['edit', 'editing', 'edited'],
+      find:     ['find','finding', 'found'],
       get:      ['get','getting', 'retrieved'],
       list:     ['list', 'listing', 'retrieved'],
-      download: ['download','downloading', 'downloaded'],
-      find:     ['find','finding', 'found']
+      update:   ['update', 'updating', 'updated'],
     }
     run, running, ran = terms[action]
+
+    raise "Action (#{action}) is undefined" unless run && running && ran
 
     info "#{running.capitalize} the #{entity.downcase}"
     begin
@@ -147,13 +151,14 @@ class GithubConnectorDefinition < Factor::Connector::Definition
 
   resource :issue do
     action :list do |params|
-      github     = init_github(params)
+      github = init_github(params)
+      issues = nil
 
       keys = %w{user repo filter state since labels sort direction}
       payload = params.select{|k,v| keys.include?(k.to_s)}
 
       wrap_call 'issues', :list do
-        issues = github.issues.list(payload).body.map { |i| issues << i.to_hash }
+        issues = github.issues.list(payload).body.map { |i| i.to_hash }
       end
 
       respond issues
@@ -163,6 +168,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
       title                  = load_and_validate(params, :title, required:true)
+      issue                  = nil
 
       payload = {
         user: username,
@@ -182,12 +188,12 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     action :edit do |params|
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
-      number                 = load_and_validate(params, :id, required:true)
+      number                 = load_and_validate(params, :number, required:true)
+      issue                  = nil
 
       payload = {
         user: username,
-        repo: repo,
-        title: title
+        repo: repo
       }
 
       [:body, :assignee, :labels, :state, :title].each {|k| payload[k] = params[k] if params[k] }
@@ -202,7 +208,8 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     action :get do |params|
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
-      number                 = load_and_validate(params, :id, required:true)
+      number                 = load_and_validate(params, :number, required:true)
+      issue = nil
 
       payload = {
         user:   username,
@@ -220,7 +227,8 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     action :close do |params|
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
-      number                 = load_and_validate(params, :id, required:true)
+      number                 = load_and_validate(params, :number, required:true)
+      issue                  = nil
 
       wrap_call 'issue', :close do
         issue = github.issues.edit(username, repo, number, state: 'closed').to_hash
