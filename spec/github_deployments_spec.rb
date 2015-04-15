@@ -1,83 +1,46 @@
 require 'spec_helper'
 
-describe 'Github' do
-  describe 'Deployments' do
-    before(:all) do
-      @api_key = ENV['GITHUB_API_KEY']
-      @scope = service_instance('github_deployments')
-    end
-
-    it 'can list all deployments' do      
-      github = Github.new oauth_token: @api_key
-      deployment = github.repos.deployments.create 'skierkowski', 'hello' , ref:'terst'
-      params = {
-        'api_key'  => @api_key,
-        'username' => 'skierkowski',
-        'repo'     => 'hello'
-      }
-      @scope.test_action('list', params) do
-        return_info = expect_return[:payload]
-        expect(return_info).to be_a(Array)
-        return_info.each do |release|
-          expect(release).to be_a(Hash)
-        end
-      end
-    end
-
-    it 'can create a deployment' do
-      github = Github.new oauth_token: @api_key
-
-      params = {
-        'api_key'     => @api_key,
-        'username'    => 'skierkowski',
-        'repo'        => 'hello',
-        'ref'         => 'terst'
-      }
-      @scope.test_action('create', params) do
-        return_info = expect_return[:payload]
-        expect(return_info).to be_a(Hash)
-      end
-    end
-
-    describe 'Status' do 
+describe GithubConnectorDefinition do
+  describe :deployment do
+    context 'with a deployment' do
       before :all do
-        github = Github.new oauth_token: @api_key
-        @deployment = github.repos.deployments.create 'skierkowski', 'hello' , ref:'terst'
+        @deployment = create_deployment
       end
 
-      after :all do
-      end
-      
+      it :list do
+        @runtime.run([:deployment,:list],api_key: @api_key, repo:"#{@user}/#{@repo}")
+        expect(@runtime).to respond
+        last =  @runtime.logs.last
+        expect(last[:data]).to be_a(Array)
 
-      it 'can list deployment statuses' do
-        params = {
-          'api_key'  => @api_key,
-          'username' => 'skierkowski',
-          'repo'     => 'hello',
-          'id'       => @deployment.id
-        }
-        @scope.test_action('statuses', params) do
-          return_info = expect_return[:payload]
-          expect(return_info).to be_a(Array)
-          return_info.each do |release|
-            expect(release).to be_a(Hash)
-          end
-        end
       end
 
-      it 'can create a deployment status' do
-        params = {
-          'api_key'     => @api_key,
-          'username'    => 'skierkowski',
-          'repo'        => 'hello',
-          'id'          => @deployment.id,
-          'state'       => 'success',
-          'description' => 'deployment was successful'
-        }
-        @scope.test_action('create_status', params) do
-          return_info = expect_return[:payload]
-          expect(return_info).to be_a(Hash)
-        end
+      it :statuses do
+        @runtime.run([:deployment,:statuses],api_key: @api_key, repo:"#{@user}/#{@repo}#master", deployment:@deployment['id'])
+        expect(@runtime).to respond
+      end
+
+      it :create_status do
+        @runtime.run([:deployment,:create_status],api_key: @api_key, repo:"#{@user}/#{@repo}#master", deployment:@deployment['id'], state:'success')
+        expect(@runtime).to respond
+      end
+    end
+
+    context 'without a deployment' do
+      it :create do
+        @runtime.run([:deployment,:create],api_key: @api_key, repo:"#{@user}/#{@repo}#master")
+        expect(@runtime).to respond
+        last =  @runtime.logs.last
+        expect(last[:data]).to include('id')
+        expect(last[:data]).to include('sha')
+        expect(last[:data]).to include('ref')
+        expect(last[:data]).to include('task')
+        expect(last[:data]).to include('payload')
+        expect(last[:data]).to include('environment')
+        expect(last[:data]).to include('description')
+        expect(last[:data]).to include('creator')
+        expect(last[:data]).to include('statuses_url')
+        expect(last[:data]).to include('repository_url')
       end
     end
   end

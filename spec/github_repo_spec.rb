@@ -1,26 +1,15 @@
 require 'spec_helper'
 
-describe 'github_repo' do
+describe GithubConnectorDefinition do
+  describe 'Repository' do
+    describe 'download' do
+      it 'can download a repo' do
+        @runtime.run([:repo,:download],api_key: @api_key, repo:'skierkowski/hello')
 
-  before(:all) do
-    @api_key = ENV['GITHUB_API_KEY']
-    @params = {
-      'api_key' => @api_key,
-      'username' => 'skierkowski',
-      'repo'    => 'hello',
-      'branch'  => 'master'
-    }
-  end
+        expect(@runtime).to respond
+        last =  @runtime.logs.last
 
-  describe 'download' do
-    it 'can download a repo' do
-      service_instance = service_instance('github_repo')
-      service_instance.test_action('download', @params) do
-        return_info = expect_return
-        expect(return_info).to be_a(Hash)
-        expect(return_info).to include(:payload)
-        expect(return_info[:payload]).to be_a(Hash)
-        expect(return_info[:payload]).to include(:content)
+        expect(last[:data]).to include(:content)
       end
     end
   end
