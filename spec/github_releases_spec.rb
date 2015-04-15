@@ -1,71 +1,44 @@
 require 'spec_helper'
 
 describe GithubConnectorDefinition do
-  describe 'Releases' do
-    it 'can list all releases' do      
-      # release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}"
-      # params = {
-      #   'api_key' => @api_key,
-      #   'username' => 'skierkowski',
-      #   'repo'    => 'hello'
-      # }
-      # @scope.test_action('list', params) do
-      #   return_info = expect_return[:payload]
-      #   expect(return_info).to be_a(Array)
-      #   return_info.each do |release|
-      #     expect(release).to be_a(Hash)
-      #   end
-      # end
-      # github.repos.releases.delete 'skierkowski', 'hello', release.id
+  describe :releases do
+    context 'with any release' do
+      before :all do
+        # @release = create_release tag:'test'
+      end
+      after :all do
+        # delete_release(release:@release['id'])
+      end
+      it 'can :list' do
+        @runtime.run([:release,:list],api_key: @api_key, repo:"#{@user}/#{@repo}")
+        expect(@runtime).to respond
+      end
+
+      it 'can :get' do
+        # @runtime.run([:release,:get],api_key: @api_key, repo:"#{@user}/#{@repo}", release: @release['id'])
+        # expect(@runtime).to respond
+      end
     end
 
-    it 'can get a release by id' do
-      # release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}"
-      # params = {
-      #   'api_key'  => @api_key,
-      #   'username' => 'skierkowski',
-      #   'repo'     => 'hello',
-      #   'id'       => release.id
-      # }
-      # @scope.test_action('get', params) do
-      #   return_info = expect_return[:payload]
-      #   expect(return_info).to be_a(Hash)
-      # end
+    context 'with deleteable release' do
+      before :each do
+        # @release = create_release tag:'test'
+      end
 
-      # github.repos.releases.delete 'skierkowski', 'hello', release.id
+      it 'can :delete' do
+        # @runtime.run([:release,:delete],api_key: @api_key, repo:"#{@user}/#{@repo}", release: @release['id'])
+        # expect(@runtime).to respond
+      end
     end
 
-    it 'can create a release' do
-      # params = {
-      #   'api_key'    => @api_key,
-      #   'username'   => 'skierkowski',
-      #   'repo'       => 'hello',
-      #   'name'       => "Test Release for #{SecureRandom.hex(4)}",
-      #   'tag_name'   => 'test',
-      #   'prerelease' => true
-      # }
-      # @scope.test_action('create', params) do
-      #   return_info = expect_return[:payload]
-      #   expect(return_info).to be_a(Hash)
-      #   github.repos.releases.delete 'skierkowski', 'hello', return_info['id']
-      # end
-    end
+    context 'without release' do
+      after :each do
 
-    it 'can delete a release' do
-      # release = github.repos.releases.create 'skierkowski', 'hello', 'test', name:"Test for #{SecureRandom.hex(4)}", prerelease: true
+      end
+      it :create do
 
-      # params = {
-      #   'api_key'  => @api_key,
-      #   'username' => 'skierkowski',
-      #   'repo'     => 'hello',
-      #   'id'       => release.id
-      # }
-      # @scope.test_action('delete', params) do
-      #   return_info = expect_return[:payload]
-      #   expect(return_info).to be_a(Hash)
 
-      #   expect { github.repos.releases.get 'skierkowski', 'hello', release.id }.to raise_error(Github::Error::NotFound)
-      # end
+      end
     end
   end
 end

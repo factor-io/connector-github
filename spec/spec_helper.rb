@@ -50,4 +50,27 @@ RSpec.configure do |c|
     @github.issues.get(user:user, repo:repo, number: number).to_hash
   end
 
+  def create_deployment(options={})
+    user = options[:user] || @user
+    repo = options[:repo] || @repo
+    ref = options[:branch] || 'master'
+
+    @github.repos.deployments.create(user, repo, ref: ref).body.to_hash
+  end
+
+  def create_release(options={})
+    user = options[:user] || @user
+    repo = options[:repo] || @repo
+    tag  = options[:tag]
+
+    @github.repos.releases.create(user, repo, tag, tag_name:'sweet', name:'sweet2').body.to_hash
+  end
+
+  def delete_release(options = {})
+    user = options[:user] || @user
+    repo = options[:repo] || @repo
+    release = options[:release]
+
+    @github.repos.releases.delete(user, repo, id).body.to_hash
+  end
 end

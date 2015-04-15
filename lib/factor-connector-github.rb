@@ -90,7 +90,9 @@ class GithubConnectorDefinition < Factor::Connector::Definition
 
   resource :deployment do
     action :list do |params|
-      github = init_github(params)
+      github              = init_github(params)
+      username, repo, ref = parse_repo(params)
+      deployments         = nil
 
       wrap_call 'deployments', :list do
         deployments = github.repos.deployments.list(username, repo).body.map { |i| i.to_hash }
@@ -100,27 +102,30 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     end
 
     action :create do |params|
-      github   = init_github(params)
+      github              = init_github(params)
       username, repo, ref = parse_repo(params)
-      
-      tag_options = %w(ref task auto_merge required_contexts payload environment description force)
+      status              = nil
+      tag_options         = %w(task auto_merge required_contexts payload environment description force)
 
-      deployment_params = {} 
+      fail "Branch is required in the repo" unless ref
+
+      deployment_params = {ref: ref} 
       params.each do |key,value|
         deployment_params[key.to_sym] = value if tag_options.include?(key.to_s)
       end
 
       wrap_call 'deployment', :create do
-        status = github.repos.deployments.create username, repo, deployment_params
+        status = github.repos.deployments.create(username, repo, deployment_params).body.to_hash
       end
 
-      respond status.body.to_hash
+      respond status
     end
 
     action :statuses do |params|
-      github     = init_github(params)
+      github              = init_github(params)
       username, repo, ref = parse_repo(params)
-      deployment = load_and_validate(params,:deployment, required:true)
+      deployment          = load_and_validate(params,:deployment, required:true)
+      deployment_statuses = nil
 
       wrap_call 'statuses', :get do
         deployment_statuses = github.repos.deployments.statuses(username, repo, deployment).body.map { |i| i.to_hash }
@@ -133,19 +138,20 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       github              = init_github(params)
       username, repo, ref = parse_repo(params)
       deployment          = load_and_validate(params,:deployment, required:true)
+      state               = load_and_validate(params, :state, one_of:['pending','success','error','failure'])
+      tag_options         = %w(target_url description)
+      status              = nil
 
-      tag_options = %w(state target_url description)
-
-      status_params = {} 
+      status_params = {state: state, id: deployment} 
       params.each do |key,value|
         status_params[key.to_sym] = value if tag_options.include?(key.to_s)
       end
 
       wrap_call 'status', :create do
-        status = github.repos.deployments.create_status username, repo, deployment, status_params
+        status = github.repos.deployments.create_status(username, repo, deployment, status_params).body.to_hash
       end
 
-      respond status.body.to_hash
+      respond status
     end
   end
 
@@ -242,6 +248,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     action :list do |params|
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
+      releases               = nil
 
       wrap_call 'releases', :list do
         releases = github.repos.releases.list(username, repo).body.map { |i| i.to_hash }
@@ -254,6 +261,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
       tag                    = load_and_validate(params, :tag, required:true)
+      release                = nil
 
       tag_options = %w(target_commitish body name draft prerelease)
 
@@ -263,7 +271,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       end
 
       wrap_call 'releases', :create do
-        releases = github.repos.releases.create(username, repo, tag_name, tag_params).body.to_hash
+        release = github.repos.releases.create(username, repo, tag_name, tag_params).body.to_hash
       end
 
       respond release
@@ -273,6 +281,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
       id                     = load_and_validate(params, :id, required:true)
+      release                = nil
 
       wrap_call 'releases', :get do
         release = github.repos.releases.get(username, repo, id).body.to_hash
@@ -285,6 +294,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
       id                     = load_and_validate(params, :id, required:true)
+      release                = nil
 
       wrap_call 'release', :delete do
         release = github.repos.releases.delete(username, repo, id).body.to_hash
@@ -420,6 +430,7 @@ class GithubConnectorDefinition < Factor::Connector::Definition
     action :list do |params|
       github                 = init_github(params)
       username, repo, branch = parse_repo(params)
+      statuses               = nil
       
       fail "You must specify branch/ref in the Repository (:repo) parameter" unless branch
 
@@ -435,10 +446,11 @@ class GithubConnectorDefinition < Factor::Connector::Definition
       username, repo, branch = parse_repo(params)
       state                  = load_and_validate(params,:state,required:true,one_of:['pending','success','error','failure'])
       sha                    = load_and_validate(params,:sha,required:true)
+      status                 = nil
 
-      tag_options = %w(state target_url description context)
+      tag_options = %w(target_url description context)
 
-      status_params = {} 
+      status_params = {state: state, sha: sha} 
       params.each do |key,value|
         status_params[key.to_sym] = value if tag_options.include?(key)
       end
