@@ -4,10 +4,10 @@ describe GithubConnectorDefinition do
   describe :issue do
 
     context 'with an existing issue' do
-      before :each do
+      before :all do
         @issue = create_issue(title:'sweet')
       end
-      after :each do
+      after :all do
         close_issue(number:@issue['number']) if @issue
       end
 
