@@ -3,7 +3,6 @@ require 'spec_helper'
 describe GithubConnectorDefinition do
   describe 'deployments' do
     it 'can list all deployments' do      
-      # github = Github.new oauth_token: @api_key
       # deployment = github.repos.deployments.create 'skierkowski', 'hello' , ref:'terst'
       # params = {
       #   'api_key'  => @api_key,
@@ -20,8 +19,6 @@ describe GithubConnectorDefinition do
     end
 
     it 'can create a deployment' do
-      # github = Github.new oauth_token: @api_key
-
       # params = {
       #   'api_key'     => @api_key,
       #   'username'    => 'skierkowski',
@@ -36,7 +33,6 @@ describe GithubConnectorDefinition do
 
     describe 'Status' do 
       before :all do
-        # github = Github.new oauth_token: @api_key
         # @deployment = github.repos.deployments.create 'skierkowski', 'hello' , ref:'test'
       end
 
