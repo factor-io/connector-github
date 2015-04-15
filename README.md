@@ -1,6 +1,6 @@
 factor-connector-github
 ======================
-[![Code Climate](https://codeclimate.com/github/factor-io/connector-heroku/badges/gpa.svg)](https://codeclimate.com/github/factor-io/connector-heroku)
+[![Code Climate](https://codeclimate.com/github/factor-io/connector-github/badges/gpa.svg)](https://codeclimate.com/github/factor-io/connector-github)
 [![Test Coverage](https://codeclimate.com/github/factor-io/connector-github/badges/coverage.svg)](https://codeclimate.com/github/factor-io/connector-github)
 [![Build Status](https://travis-ci.org/factor-io/connector-github.svg?branch=master)](https://travis-ci.org/factor-io/connector-github)
 [![Dependency Status](https://gemnasium.com/factor-io/connector-github.svg)](https://gemnasium.com/factor-io/connector-github)
