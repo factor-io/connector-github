@@ -1,15 +1,15 @@
 language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.3
-  - 2.1.5
-  - 2.2.0
-  - 2.2.1
-  - 2.2.2
+- 1.9.3
+- 2.0.0
+- 2.1.3
+- 2.1.5
+- 2.2.0
+- 2.2.1
+- 2.2.2
 env:
   global:
-  - secure: hz+MHfMKeOgDA6JgvLZsCJEypVkOLYvE+1hih69WNIHs5Fn55zrA4xpowbUnxV8s2vMdLYWeATMmkEORy2fyn7KdiEhWAIapLpk8SnfJvCshuivZ19vB1ylHERbITGetcrP0/xiPR+wdW4L8DIFJ34uvJP27Gv3MeMTmUslLF4s=
+  - secure: G0CLV7rqELRHQfnLNaA31r2eTcvXAVLQe7FDZZXzzZmwVNeDOo45m/hZ2E+36B3AeLtjaSWhbQn5Kr5CuSqTl2Q9gmzIrZxu7ZASA7u8aSwfo1aGqSlkoOu9D/akpQUq8P25p20CS85y1WOwlkdu2ta7OtCW2oSeLu3RX6QXzmo=
   - secure: XcQVpkJEe+C2aZ7CAEYssl3knjz+ikFRSiVtVqa9pPTfGgeNrYPAUdHRPf8+wlYmaGz/KISeRvwCHpq7weDkZbgVMspRKvwcMWeUOvuAvZSuo5VKF4CDkGVRH4CA7Px5szNpSl2JV12dwcn0FZc3KGszVT6epjxjzIaqqCHPMTU=
 deploy:
   provider: rubygems
